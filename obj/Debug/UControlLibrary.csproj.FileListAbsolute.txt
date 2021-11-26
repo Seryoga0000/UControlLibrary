@@ -1,0 +1,13 @@
+C:\Users\Сергей\source\repos\UControlLibrary\bin\Debug\UControlLibrary.dll
+C:\Users\Сергей\source\repos\UControlLibrary\bin\Debug\UControlLibrary.pdb
+C:\Users\Сергей\source\repos\UControlLibrary\bin\Debug\ExtensionLib.dll
+C:\Users\Сергей\source\repos\UControlLibrary\bin\Debug\ExtensionLib.pdb
+C:\Users\Сергей\source\repos\UControlLibrary\obj\Debug\UControlLibrary.csprojAssemblyReference.cache
+C:\Users\Сергей\source\repos\UControlLibrary\obj\Debug\UControlLibrary.csproj.GenerateResource.cache
+C:\Users\Сергей\source\repos\UControlLibrary\obj\Debug\UControlLibrary.csproj.CoreCompileInputs.cache
+C:\Users\Сергей\source\repos\UControlLibrary\obj\Debug\UControlLibrary.csproj.CopyComplete
+C:\Users\Сергей\source\repos\UControlLibrary\obj\Debug\UControlLibrary.dll
+C:\Users\Сергей\source\repos\UControlLibrary\obj\Debug\UControlLibrary.pdb
+C:\Users\Сергей\source\repos\UControlLibrary\obj\Debug\UControlLibrary.GraphSettingsForm.resources
+C:\Users\Сергей\source\repos\UControlLibrary\obj\Debug\UControlLibrary.UColorDialog.resources
+C:\Users\Сергей\source\repos\UControlLibrary\obj\Debug\UControlLibrary.UProgressBar.resources
