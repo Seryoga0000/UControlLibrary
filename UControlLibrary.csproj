@@ -81,12 +81,6 @@
     <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Extension Library\ExtensionLib\ExtensionLib.csproj">
-      <Project>{6190e8a7-6448-42a2-b314-8216ac8ea708}</Project>
-      <Name>ExtensionLib</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="GraphSettingsForm.resx">
       <DependentUpon>GraphSettingsForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -96,6 +90,12 @@
     <EmbeddedResource Include="UProgressBar.resx">
       <DependentUpon>UProgressBar.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ExtensionLib\ExtensionLib.csproj">
+      <Project>{6190e8a7-6448-42a2-b314-8216ac8ea708}</Project>
+      <Name>ExtensionLib</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

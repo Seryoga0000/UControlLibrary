@@ -97,11 +97,29 @@ namespace UControlLibrary
             lineSeries.Color = Color.Blue;
             lineSeries.Name = "ValueSeries";
             lineSeries.XValueType = ChartValueType.DateTime;
+            lineSeries.ToolTip = "#VALY, #VALX";
             //Series.Add(valueSeries);
             //Size = new Size(420, 358);
             Text = "MainChart";
-            
+            MouseClick += UDataChart_MouseClick;
             ;
+        }
+
+        private void UDataChart_MouseClick(object sender, MouseEventArgs e)
+        {
+            var r = HitTest(e.X, e.Y);
+
+            if (r.ChartElementType == ChartElementType.DataPoint)
+            {
+                
+                Series lineSeries = Series.FirstOrDefault();
+                var p = lineSeries.Points[r.PointIndex];
+                p.MarkerSize = 60;
+                p.Color=Color.Red;
+                //int index = r.PointIndex;
+
+                //CurrentCell = MainTable[1, index + 0];
+            }
         }
 
         public void InitializeTSett()
@@ -344,9 +362,7 @@ namespace UControlLibrary
 
         #endregion
 
-        #region События Core
-
-        #endregion
+     
 
         #region ДобавлениеТочки
 
