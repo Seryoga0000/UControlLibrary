@@ -47,6 +47,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ComMonitor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ComMonitor.Designer.cs" />
     <Compile Include="SmartButton.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -78,9 +82,11 @@
       <DependentUpon>UserControl1.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UTimer.cs" />
     <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="ComMonitor.resx" />
     <EmbeddedResource Include="GraphSettingsForm.resx">
       <DependentUpon>GraphSettingsForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -92,7 +98,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ExtensionLib\ExtensionLib.csproj">
+    <ProjectReference Include="..\Extension Library\ExtensionLib\ExtensionLib.csproj">
       <Project>{6190e8a7-6448-42a2-b314-8216ac8ea708}</Project>
       <Name>ExtensionLib</Name>
     </ProjectReference>
