@@ -98,7 +98,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Extension Library\ExtensionLib\ExtensionLib.csproj">
+    <ProjectReference Include="..\ExtensionLib\ExtensionLib.csproj">
       <Project>{6190e8a7-6448-42a2-b314-8216ac8ea708}</Project>
       <Name>ExtensionLib</Name>
     </ProjectReference>

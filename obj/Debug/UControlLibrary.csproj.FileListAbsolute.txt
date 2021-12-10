@@ -11,7 +11,6 @@ C:\Users\Сергей\source\repos\UControlLibrary\obj\Debug\UControlLibrary.pdb
 C:\Users\Сергей\source\repos\UControlLibrary\obj\Debug\UControlLibrary.GraphSettingsForm.resources
 C:\Users\Сергей\source\repos\UControlLibrary\obj\Debug\UControlLibrary.UColorDialog.resources
 C:\Users\Сергей\source\repos\UControlLibrary\obj\Debug\UControlLibrary.UProgressBar.resources
-C:\Users\Сергей\source\repos\Seryoga0000\UControlLibrary\obj\Debug\UControlLibrary.csprojAssemblyReference.cache
 C:\Users\Сергей\source\repos\Seryoga0000\UControlLibrary\obj\Debug\UControlLibrary.GraphSettingsForm.resources
 C:\Users\Сергей\source\repos\Seryoga0000\UControlLibrary\obj\Debug\UControlLibrary.UColorDialog.resources
 C:\Users\Сергей\source\repos\Seryoga0000\UControlLibrary\obj\Debug\UControlLibrary.UProgressBar.resources
@@ -24,17 +23,4 @@ C:\Users\Сергей\source\repos\Seryoga0000\UControlLibrary\bin\Debug\UContro
 C:\Users\Сергей\source\repos\Seryoga0000\UControlLibrary\bin\Debug\ExtensionLib.dll
 C:\Users\Сергей\source\repos\Seryoga0000\UControlLibrary\bin\Debug\ExtensionLib.pdb
 C:\Users\Сергей\source\repos\Seryoga0000\UControlLibrary\obj\Debug\UControlLibrary.csproj.CopyComplete
-E:\VisualStudioProject\UControlLibrary\bin\Debug\UControlLibrary.dll
-E:\VisualStudioProject\UControlLibrary\bin\Debug\UControlLibrary.pdb
-E:\VisualStudioProject\UControlLibrary\bin\Debug\ExtensionLib.dll
-E:\VisualStudioProject\UControlLibrary\bin\Debug\ExtensionLib.pdb
-E:\VisualStudioProject\UControlLibrary\obj\Debug\UControlLibrary.csproj.AssemblyReference.cache
-E:\VisualStudioProject\UControlLibrary\obj\Debug\UControlLibrary.ComMonitor.resources
-E:\VisualStudioProject\UControlLibrary\obj\Debug\UControlLibrary.GraphSettingsForm.resources
-E:\VisualStudioProject\UControlLibrary\obj\Debug\UControlLibrary.UColorDialog.resources
-E:\VisualStudioProject\UControlLibrary\obj\Debug\UControlLibrary.UProgressBar.resources
-E:\VisualStudioProject\UControlLibrary\obj\Debug\UControlLibrary.csproj.GenerateResource.cache
-E:\VisualStudioProject\UControlLibrary\obj\Debug\UControlLibrary.csproj.CoreCompileInputs.cache
-E:\VisualStudioProject\UControlLibrary\obj\Debug\UControlLibrary.csproj.CopyComplete
-E:\VisualStudioProject\UControlLibrary\obj\Debug\UControlLibrary.dll
-E:\VisualStudioProject\UControlLibrary\obj\Debug\UControlLibrary.pdb
+C:\Users\Сергей\source\repos\Seryoga0000\UControlLibrary\obj\Debug\UControlLibrary.csproj.AssemblyReference.cache

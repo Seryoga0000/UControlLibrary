@@ -36,8 +36,8 @@ namespace UControlLibrary
 
         public event PropertyChangedEventHandler PropertyChanged;
         public event EventHandler AddedPoints;
+        public event EventHandler<ClickPointEventArg> ClickPoint;
 
-       
 
         #region Очищение точек
 
@@ -113,9 +113,13 @@ namespace UControlLibrary
             {
                 
                 Series lineSeries = Series.FirstOrDefault();
-                var p = lineSeries.Points[r.PointIndex];
-                p.MarkerSize = 60;
-                p.Color=Color.Red;
+                DataPoint p = lineSeries.Points[r.PointIndex];
+                //p.MarkerSize = 60;
+                //p.BorderColor= Color.Red;
+
+                //lineSeries.Points.Remove(p);
+                OnClickPoint(new ClickPointEventArg(p, r.PointIndex));
+                //p.Color=Color.Red;
                 //int index = r.PointIndex;
 
                 //CurrentCell = MainTable[1, index + 0];
@@ -889,7 +893,29 @@ namespace UControlLibrary
         //}
 
         #endregion
+
+        protected virtual void OnClickPoint(ClickPointEventArg e)
+        {
+            ClickPoint?.Invoke(this, e);
+        }
     }
+
+    public class ClickPointEventArg:EventArgs
+    {
+        private DataPoint p;
+        private int n;
+
+        public ClickPointEventArg(DataPoint p, int n)
+        {
+            this.p = p;
+            this.n = n;
+        }
+
+        public DataPoint P => p;
+
+        public int N => n;
+    }
+
     public static class GDI32
     {
         public enum DrawingMode
