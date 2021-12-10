@@ -24,3 +24,4 @@ C:\Users\Сергей\source\repos\Seryoga0000\UControlLibrary\bin\Debug\Extensi
 C:\Users\Сергей\source\repos\Seryoga0000\UControlLibrary\bin\Debug\ExtensionLib.pdb
 C:\Users\Сергей\source\repos\Seryoga0000\UControlLibrary\obj\Debug\UControlLibrary.csproj.CopyComplete
 C:\Users\Сергей\source\repos\Seryoga0000\UControlLibrary\obj\Debug\UControlLibrary.csproj.AssemblyReference.cache
+C:\Users\Сергей\source\repos\Seryoga0000\UControlLibrary\obj\Debug\UControlLibrary.ComMonitor.resources
