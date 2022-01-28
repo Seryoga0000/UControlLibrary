@@ -214,7 +214,7 @@ namespace UControlLibrary
 
 
             //Log.Trace("UDataChart()_DefaultSettings()");
-            //DefaultSettings();
+            //Initial();
 
             //Log.Trace("UDataChart()_InitializeTSett()");
 

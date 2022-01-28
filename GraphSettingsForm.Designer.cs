@@ -46,11 +46,11 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label3.Location = new System.Drawing.Point(43, 349);
+            this.label3.Location = new System.Drawing.Point(27, 248);
             this.label3.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
             this.label3.MaximumSize = new System.Drawing.Size(400, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(372, 25);
+            this.label3.Size = new System.Drawing.Size(256, 17);
             this.label3.TabIndex = 12;
             this.label3.Text = "Формат отображения меток по оси Y";
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -59,11 +59,11 @@
             // 
             this.yStepLabel.AutoSize = true;
             this.yStepLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.yStepLabel.Location = new System.Drawing.Point(43, 298);
+            this.yStepLabel.Location = new System.Drawing.Point(27, 204);
             this.yStepLabel.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
             this.yStepLabel.MaximumSize = new System.Drawing.Size(400, 0);
             this.yStepLabel.Name = "yStepLabel";
-            this.yStepLabel.Size = new System.Drawing.Size(128, 25);
+            this.yStepLabel.Size = new System.Drawing.Size(92, 17);
             this.yStepLabel.TabIndex = 8;
             this.yStepLabel.Text = "Шаг по оси Y";
             this.yStepLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -74,11 +74,11 @@
             // 
             this.yMinLabel.AutoSize = true;
             this.yMinLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.yMinLabel.Location = new System.Drawing.Point(43, 247);
+            this.yMinLabel.Location = new System.Drawing.Point(27, 162);
             this.yMinLabel.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
             this.yMinLabel.MaximumSize = new System.Drawing.Size(400, 0);
             this.yMinLabel.Name = "yMinLabel";
-            this.yMinLabel.Size = new System.Drawing.Size(310, 25);
+            this.yMinLabel.Size = new System.Drawing.Size(222, 17);
             this.yMinLabel.TabIndex = 7;
             this.yMinLabel.Text = "Минимальное     значение оси Y";
             this.yMinLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -89,11 +89,11 @@
             // 
             this.yMaxLabel.AutoSize = true;
             this.yMaxLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.yMaxLabel.Location = new System.Drawing.Point(43, 188);
+            this.yMaxLabel.Location = new System.Drawing.Point(27, 118);
             this.yMaxLabel.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
             this.yMaxLabel.MaximumSize = new System.Drawing.Size(400, 0);
             this.yMaxLabel.Name = "yMaxLabel";
-            this.yMaxLabel.Size = new System.Drawing.Size(298, 25);
+            this.yMaxLabel.Size = new System.Drawing.Size(212, 17);
             this.yMaxLabel.TabIndex = 6;
             this.yMaxLabel.Text = "Максимальное значение оси Y";
             this.yMaxLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -104,11 +104,11 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label2.Location = new System.Drawing.Point(43, 127);
+            this.label2.Location = new System.Drawing.Point(27, 79);
             this.label2.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
             this.label2.MaximumSize = new System.Drawing.Size(400, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(325, 25);
+            this.label2.Size = new System.Drawing.Size(227, 17);
             this.label2.TabIndex = 4;
             this.label2.Text = "Максимальное количество точек";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -124,10 +124,10 @@
             "0.####E+00",
             "0.######",
             "0.######E+00"});
-            this.axisYDataFormat.Location = new System.Drawing.Point(478, 349);
+            this.axisYDataFormat.Location = new System.Drawing.Point(462, 248);
             this.axisYDataFormat.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
             this.axisYDataFormat.Name = "axisYDataFormat";
-            this.axisYDataFormat.Size = new System.Drawing.Size(160, 33);
+            this.axisYDataFormat.Size = new System.Drawing.Size(160, 24);
             this.axisYDataFormat.TabIndex = 13;
             this.axisYDataFormat.Text = "0.##E+00";
             // 
@@ -137,10 +137,10 @@
             this.stepYComboBox.FormattingEnabled = true;
             this.stepYComboBox.Items.AddRange(new object[] {
             "NaN"});
-            this.stepYComboBox.Location = new System.Drawing.Point(478, 298);
+            this.stepYComboBox.Location = new System.Drawing.Point(462, 204);
             this.stepYComboBox.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
             this.stepYComboBox.Name = "stepYComboBox";
-            this.stepYComboBox.Size = new System.Drawing.Size(113, 33);
+            this.stepYComboBox.Size = new System.Drawing.Size(113, 24);
             this.stepYComboBox.TabIndex = 11;
             this.stepYComboBox.Text = "NaN";
             // 
@@ -150,10 +150,10 @@
             this.minYComboBox.FormattingEnabled = true;
             this.minYComboBox.Items.AddRange(new object[] {
             "NaN"});
-            this.minYComboBox.Location = new System.Drawing.Point(478, 244);
+            this.minYComboBox.Location = new System.Drawing.Point(462, 159);
             this.minYComboBox.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
             this.minYComboBox.Name = "minYComboBox";
-            this.minYComboBox.Size = new System.Drawing.Size(113, 33);
+            this.minYComboBox.Size = new System.Drawing.Size(113, 24);
             this.minYComboBox.TabIndex = 10;
             this.minYComboBox.Text = "NaN";
             // 
@@ -163,10 +163,10 @@
             this.maxYComboBox.FormattingEnabled = true;
             this.maxYComboBox.Items.AddRange(new object[] {
             "NaN"});
-            this.maxYComboBox.Location = new System.Drawing.Point(478, 188);
+            this.maxYComboBox.Location = new System.Drawing.Point(462, 118);
             this.maxYComboBox.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
             this.maxYComboBox.Name = "maxYComboBox";
-            this.maxYComboBox.Size = new System.Drawing.Size(113, 33);
+            this.maxYComboBox.Size = new System.Drawing.Size(113, 24);
             this.maxYComboBox.TabIndex = 9;
             this.maxYComboBox.Text = "NaN";
             this.maxYComboBox.TextChanged += new System.EventHandler(this.maxYComboBox_TextChanged);
@@ -183,10 +183,10 @@
             "100000",
             "200000",
             "500000"});
-            this.pointLimitComboBox.Location = new System.Drawing.Point(478, 127);
+            this.pointLimitComboBox.Location = new System.Drawing.Point(462, 79);
             this.pointLimitComboBox.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
             this.pointLimitComboBox.Name = "pointLimitComboBox";
-            this.pointLimitComboBox.Size = new System.Drawing.Size(113, 33);
+            this.pointLimitComboBox.Size = new System.Drawing.Size(113, 24);
             this.pointLimitComboBox.TabIndex = 5;
             this.pointLimitComboBox.Text = "10000";
             // 
@@ -194,18 +194,18 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label1.Location = new System.Drawing.Point(43, 42);
+            this.label1.Location = new System.Drawing.Point(27, 24);
             this.label1.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
             this.label1.MaximumSize = new System.Drawing.Size(400, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(204, 25);
+            this.label1.Size = new System.Drawing.Size(144, 17);
             this.label1.TabIndex = 2;
             this.label1.Text = "Цвет линии графика";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // lineColorDialog
             // 
-            this.lineColorDialog.Location = new System.Drawing.Point(478, 42);
+            this.lineColorDialog.Location = new System.Drawing.Point(462, 24);
             this.lineColorDialog.Margin = new System.Windows.Forms.Padding(8, 10, 8, 10);
             this.lineColorDialog.Name = "lineColorDialog";
             this.lineColorDialog.SelectedColor = System.Drawing.Color.Black;
@@ -215,7 +215,7 @@
             // 
             // GraphSettingsForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.AutoScrollMinSize = new System.Drawing.Size(0, 300);

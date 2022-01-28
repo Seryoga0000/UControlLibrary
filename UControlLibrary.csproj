@@ -8,9 +8,10 @@
     <OutputType>Library</OutputType>
     <RootNamespace>UControlLibrary</RootNamespace>
     <AssemblyName>UControlLibrary</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -51,12 +52,55 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="ComMonitor.Designer.cs" />
+    <Compile Include="ConnectDialog.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ConnectDialog.designer.cs">
+      <DependentUpon>ConnectDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Menus\DataCollectorStatusLabel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Menus\DataCollectorStatusPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Menus\DataCollectorStripPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Menus\BindableStripStatusLabel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Menus\OpenButtonTBS.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Menus\ExcelButtonTBS.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Menus\TimerIntervalListTSC.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Menus\SettingsButtonTBS.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Menus\StartButtonTSB.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Menus\SaveButtonTBS.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Properties\Resource1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resource1.resx</DependentUpon>
+    </Compile>
+    <Compile Include="SaveToFile.cs" />
     <Compile Include="SmartButton.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="UChart.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="UChart2.cs" />
     <Compile Include="GraphSettingsForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -83,12 +127,20 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UTimer.cs" />
+    <Compile Include="UTypes.cs" />
     <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ComMonitor.resx" />
+    <EmbeddedResource Include="ConnectDialog.resx">
+      <DependentUpon>ConnectDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GraphSettingsForm.resx">
       <DependentUpon>GraphSettingsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resource1.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource1.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="UColorDialog.resx">
       <DependentUpon>UColorDialog.cs</DependentUpon>
@@ -102,6 +154,39 @@
       <Project>{6190e8a7-6448-42a2-b314-8216ac8ea708}</Project>
       <Name>ExtensionLib</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\excel_button.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pause_button.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Pin_Button.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\imageres_5101.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\imageres_5100.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\setting_button.jpeg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\start_button.jpeg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\stop_button.jpeg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Save_Button.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Open_Button.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\openfolder.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
