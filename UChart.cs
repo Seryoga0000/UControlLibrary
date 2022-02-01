@@ -1,6 +1,4 @@
-﻿using ExtensionLib;
-using NLog;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -9,6 +7,8 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
+using ExtensionLib;
+using NLog;
 
 namespace UControlLibrary
 {
@@ -18,19 +18,21 @@ namespace UControlLibrary
         private readonly zoomModeEnum zoomMode = zoomModeEnum.XY;
         private ContextMenuStrip graphContextMenu;
         private GraphSettingsForm gsett;
+        private bool handMovingNow;
+        private Point handMovingInitPoint;
         private string labelYFormat;
         private Color lineColor;
-   
-        private double maxY = double.NaN;
-        private double minY = double.NaN;
-        private double stepY = double.NaN;
         private double maxX = double.NaN;
+
+        private double maxY = double.NaN;
         private double minX = double.NaN;
-        private double stepX = double.NaN;
+        private double minY = double.NaN;
         private ToolStripMenuItem resetAxisScaleToAuto;
         private ToolStripMenuItem showGraphSettingsForm;
-        
-        
+        private double stepX = double.NaN;
+        private double stepY = double.NaN;
+
+
         private bool zoomingNow;
         private Rectangle zoomRect;
 
@@ -56,6 +58,94 @@ namespace UControlLibrary
         {
             //Log.Trace($"OnPropertyChanged()_propertyName={propertyName}");
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+
+        #region ДобавлениеТочки
+
+        //private void UDataChart_AddedPoints(object sender, EventArgs e)
+        //{
+        //    try
+        //    {
+        //        Log.Trace("UDataChart_AddedPoints_PointLimitChecking()");
+        //        PointLimitChecking();
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        Log.Error(exception);
+        //    }
+        //}
+
+        //private void PointLimitChecking()
+        //{
+        //    Log.Trace("PointLimitChecking()");
+
+        //    int count = PointsLimit;
+        //    int pcount = valueSeries.Points.Count;
+
+        //    for (int i = count; i < pcount; i++)
+        //    {
+        //        valueSeries.Points.RemoveAt(0);
+        //        ResetAutoValues();
+        //    }
+        //}
+
+        //private void LabelYFormatChecking()
+        //{
+        //    var axisY = ChartAreas.FirstOrDefault().AxisY;
+        //    double lymax = Math.Log10(Math.Abs(axisY.Maximum));
+        //    double lymin = Math.Log10(Math.Abs(axisY.Minimum));
+
+        //    if (lymax > 4 || lymin < -2)
+        //        LabelYFormat = "{0:0.##E+00}";
+        //    else
+        //        LabelYFormat = "{0:0.##}";
+        //}
+
+        //public void AddData(List<double> list)
+        //{
+        //    //void DoIt()
+        //    //{
+
+        //    //    try
+        //    //    {
+        //    //        int count = list.Count;
+        //    //        //int listCount = list.Count;
+        //    //        for (int i = 0; i < count; i++)
+        //    //        {
+        //    //            valueSeries.Points.AddXY(list[i].Time, list[i].DoubleValue);
+        //    //            OnAddedPoints();
+        //    //        }
+        //    //    }
+        //    //    catch (Exception e)
+        //    //    {
+        //    //        Log.Error(e);
+        //    //    }
+
+        //    //}
+
+
+        //    //try
+        //    //{
+        //    //    Log.Trace("AddData()_ BeginInvoke(new Action(DoIt))");
+        //    //    BeginInvoke(new Action(DoIt));
+        //    //}
+        //    //catch (Exception)
+        //    //{
+
+        //    //}
+        //}
+
+        protected virtual void OnAddedPoints()
+        {
+            AddedPoints?.Invoke(this, EventArgs.Empty);
+        }
+
+        #endregion
+
+        protected virtual void OnClickPoint(ClickPointEventArg e)
+        {
+            ClickPoint?.Invoke(this, e);
         }
 
         #region Конструктор
@@ -102,7 +192,21 @@ namespace UControlLibrary
             //Size = new Size(420, 358);
             Text = "MainChart";
             MouseClick += UDataChart_MouseClick;
-            ;
+            PropertyChanged += UDataChart_PropertyChanged; 
+        }
+
+        private void UDataChart_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            var area = ChartAreas.FirstOrDefault();
+            switch (e.PropertyName)
+            {
+               
+                case nameof(LabelYFormat):
+                    area.AxisY.LabelStyle.Format = LabelYFormat;
+                    break;
+                default:
+                    break;
+            }
         }
 
         private void UDataChart_MouseClick(object sender, MouseEventArgs e)
@@ -111,7 +215,6 @@ namespace UControlLibrary
 
             if (r.ChartElementType == ChartElementType.DataPoint)
             {
-                
                 Series lineSeries = Series.FirstOrDefault();
                 DataPoint p = lineSeries.Points[r.PointIndex];
                 //p.MarkerSize = 60;
@@ -134,28 +237,28 @@ namespace UControlLibrary
             gsett = new GraphSettingsForm(this);
             //gsett.LineColorDialog.ColorChanged += LineColorDialog_ColorChanged;
             //gsett.LineColorDialog.DataBindings.Add("SelectedColor",core.VSett, "GraphPointsColor", true, DataSourceUpdateMode.OnPropertyChanged);
-            gsett.LineColorDialog.DataBindings.Add(nameof(gsett.LineColorDialog.SelectedColor), lineSeries,
-                nameof(lineSeries.Color),
-                true, DataSourceUpdateMode.OnValidation);
-            //gsett.PointLimitComboBox.TextChanged += PointLimitComboBox_TextChanged;
-            //gsett.PointLimitComboBox.DataBindings.Add("Text", core.VSett, "DataItemsLimit", true, DataSourceUpdateMode.OnPropertyChanged);
-            gsett.PointLimitComboBox.DataBindings.Add(nameof(gsett.PointLimitComboBox.Text), this,
-                nameof(PointsLimit),
-                true, DataSourceUpdateMode.OnValidation);
-            //gsett.MaxYComboBox.DataBindings.Add("Text", core.VSett, "GraphYmax", true, DataSourceUpdateMode.OnPropertyChanged);
-            gsett.MaxYComboBox.DataBindings.Add(nameof(gsett.MaxYComboBox.Text), axisY, nameof(axisY.Maximum),
-                true, DataSourceUpdateMode.OnValidation);
-            //gsett.MaxYComboBox.TextChanged += MaxYComboBox_TextChanged;
-            //gsett.MinYComboBox.DataBindings.Add("Text", core.VSett, "GraphYmin", true, DataSourceUpdateMode.OnPropertyChanged);
-            gsett.MinYComboBox.DataBindings.Add(nameof(gsett.MinYComboBox.Text), axisY, nameof(axisY.Minimum),
-                true, DataSourceUpdateMode.OnValidation);
-            //gsett.MinYComboBox.TextChanged += MinYComboBox_TextChanged;
-            //gsett.StepYComboBox.DataBindings.Add("Text", core.VSett, "GraphYstep", true, DataSourceUpdateMode.OnPropertyChanged);
-            gsett.StepYComboBox.DataBindings.Add(nameof(gsett.StepYComboBox.Text), axisY, nameof(axisY.Interval),
-                true, DataSourceUpdateMode.OnValidation);
-            //gsett.StepYComboBox.TextChanged += StepYComboBox_TextChanged;
-            gsett.AxisYDataFormat.DataBindings.Add(nameof(gsett.AxisYDataFormat.Text), this, nameof(LabelYFormat),
-                true, DataSourceUpdateMode.OnValidation);
+            //gsett.LineColorDialog.DataBindings.Add(nameof(gsett.LineColorDialog.SelectedColor), lineSeries,
+            //    nameof(lineSeries.Color),
+            //    true, DataSourceUpdateMode.OnValidation);
+            ////gsett.PointLimitComboBox.TextChanged += PointLimitComboBox_TextChanged;
+            ////gsett.PointLimitComboBox.DataBindings.Add("Text", core.VSett, "DataItemsLimit", true, DataSourceUpdateMode.OnPropertyChanged);
+            //gsett.PointLimitComboBox.DataBindings.Add(nameof(gsett.PointLimitComboBox.Text), this,
+            //    nameof(PointsLimit),
+            //    true, DataSourceUpdateMode.OnValidation);
+            ////gsett.MaxYComboBox.DataBindings.Add("Text", core.VSett, "GraphYmax", true, DataSourceUpdateMode.OnPropertyChanged);
+            //gsett.MaxYComboBox.DataBindings.Add(nameof(gsett.MaxYComboBox.Text), axisY, nameof(axisY.Maximum),
+            //    true, DataSourceUpdateMode.OnValidation);
+            ////gsett.MaxYComboBox.TextChanged += MaxYComboBox_TextChanged;
+            ////gsett.MinYComboBox.DataBindings.Add("Text", core.VSett, "GraphYmin", true, DataSourceUpdateMode.OnPropertyChanged);
+            //gsett.MinYComboBox.DataBindings.Add(nameof(gsett.MinYComboBox.Text), axisY, nameof(axisY.Minimum),
+            //    true, DataSourceUpdateMode.OnValidation);
+            ////gsett.MinYComboBox.TextChanged += MinYComboBox_TextChanged;
+            ////gsett.StepYComboBox.DataBindings.Add("Text", core.VSett, "GraphYstep", true, DataSourceUpdateMode.OnPropertyChanged);
+            //gsett.StepYComboBox.DataBindings.Add(nameof(gsett.StepYComboBox.Text), axisY, nameof(axisY.Interval),
+            //    true, DataSourceUpdateMode.OnValidation);
+            ////gsett.StepYComboBox.TextChanged += StepYComboBox_TextChanged;
+            //gsett.AxisYDataFormat.DataBindings.Add(nameof(gsett.AxisYDataFormat.Text), this, nameof(LabelYFormat),
+            //    true, DataSourceUpdateMode.OnValidation);
         }
 
         public void ContextMenuSettings()
@@ -316,7 +419,7 @@ namespace UControlLibrary
 
         //private void StepYComboBox_TextChanged(object sender, EventArgs e)
         //{
-        //   core.VSett.GraphYstep = gsett.YStep;
+        //    core.VSett.GraphYstep = gsett.YStep;
         //}
 
         //private void MinYComboBox_TextChanged(object sender, EventArgs e)
@@ -352,8 +455,8 @@ namespace UControlLibrary
             axisY.Minimum = double.NaN;
 
             axisY.Interval = double.NaN;
-          
         }
+
         private void XReset()
         {
             var axisX = ChartAreas.FirstOrDefault().AxisX;
@@ -362,90 +465,6 @@ namespace UControlLibrary
             axisX.Minimum = double.NaN;
 
             axisX.Interval = double.NaN;
-        }
-
-        #endregion
-
-     
-
-        #region ДобавлениеТочки
-
-        //private void UDataChart_AddedPoints(object sender, EventArgs e)
-        //{
-        //    try
-        //    {
-        //        Log.Trace("UDataChart_AddedPoints_PointLimitChecking()");
-        //        PointLimitChecking();
-        //    }
-        //    catch (Exception exception)
-        //    {
-        //        Log.Error(exception);
-        //    }
-        //}
-
-        //private void PointLimitChecking()
-        //{
-        //    Log.Trace("PointLimitChecking()");
-
-        //    int count = PointsLimit;
-        //    int pcount = valueSeries.Points.Count;
-
-        //    for (int i = count; i < pcount; i++)
-        //    {
-        //        valueSeries.Points.RemoveAt(0);
-        //        ResetAutoValues();
-        //    }
-        //}
-
-        //private void LabelYFormatChecking()
-        //{
-        //    var axisY = ChartAreas.FirstOrDefault().AxisY;
-        //    double lymax = Math.Log10(Math.Abs(axisY.Maximum));
-        //    double lymin = Math.Log10(Math.Abs(axisY.Minimum));
-
-        //    if (lymax > 4 || lymin < -2)
-        //        LabelYFormat = "{0:0.##E+00}";
-        //    else
-        //        LabelYFormat = "{0:0.##}";
-        //}
-
-        //public void AddData(List<double> list)
-        //{
-        //    //void DoIt()
-        //    //{
-
-        //    //    try
-        //    //    {
-        //    //        int count = list.Count;
-        //    //        //int listCount = list.Count;
-        //    //        for (int i = 0; i < count; i++)
-        //    //        {
-        //    //            valueSeries.Points.AddXY(list[i].Time, list[i].DoubleValue);
-        //    //            OnAddedPoints();
-        //    //        }
-        //    //    }
-        //    //    catch (Exception e)
-        //    //    {
-        //    //        Log.Error(e);
-        //    //    }
-
-        //    //}
-
-
-        //    //try
-        //    //{
-        //    //    Log.Trace("AddData()_ BeginInvoke(new Action(DoIt))");
-        //    //    BeginInvoke(new Action(DoIt));
-        //    //}
-        //    //catch (Exception)
-        //    //{
-
-        //    //}
-        //}
-
-        protected virtual void OnAddedPoints()
-        {
-            AddedPoints?.Invoke(this, EventArgs.Empty);
         }
 
         #endregion
@@ -493,6 +512,14 @@ namespace UControlLibrary
 
                 DrawZoomRect();
             }
+
+            //hand moving
+            if (e.Button == MouseButtons.Left && e.Clicks == 1 && (ModifierKeys & Keys.Alt) != 0 &&
+                sender is Chart)
+            {
+                handMovingNow = true;
+                handMovingInitPoint = e.Location;
+            }
         }
 
         private void DrawZoomRect()
@@ -505,8 +532,6 @@ namespace UControlLibrary
             }
             catch (Exception)
             {
-
-                
             }
             //if (useGDI32)
             //{
@@ -540,6 +565,8 @@ namespace UControlLibrary
 
                 zoomingNow = false;
             }
+
+            if (handMovingNow && e.Button == MouseButtons.Left) handMovingNow = false;
         }
 
         private void ZoomInToZoomRect()
@@ -679,7 +706,7 @@ namespace UControlLibrary
                     case zoomModeEnum.Y:
                         var axX = ((Chart) sender).ChartAreas[0].AxisX;
                         zoomRect.Width = (int) (axX.ValueToPixelPosition(axX.Maximum) -
-                                                axX.ValueToPixelPosition(axX.Minimum));
+                            axX.ValueToPixelPosition(axX.Minimum));
                         zoomRect.Height = e.Y - zoomRect.Top;
                         break;
                     case zoomModeEnum.X:
@@ -687,6 +714,38 @@ namespace UControlLibrary
                 }
 
                 DrawZoomRect();
+            }
+
+            if (handMovingNow)
+            {
+                //var left;
+                //var right;
+                //var top;
+                //var bottom;
+
+
+                //ctrl.Top = (e.Y - handMovingInitPoint.Y);
+                //ctrl.Left = (e.X - handMovingInitPoint.X);
+                //SetZoomAxisScale(ChartAreas[0].AxisX, r.Left, r.Right);
+                //SetZoomAxisScale(ChartAreas[0].AxisY, r.Bottom, r.Top);
+                //DrawZoomRect();
+                //switch (zoomMode)
+                //{
+                //    case zoomModeEnum.XY:
+                //        zoomRect.Width = e.X - zoomRect.Left;
+                //        zoomRect.Height = e.Y - zoomRect.Top;
+                //        break;
+                //    case zoomModeEnum.Y:
+                //        var axX = ((Chart)sender).ChartAreas[0].AxisX;
+                //        zoomRect.Width = (int)(axX.ValueToPixelPosition(axX.Maximum) -
+                //            axX.ValueToPixelPosition(axX.Minimum));
+                //        zoomRect.Height = e.Y - zoomRect.Top;
+                //        break;
+                //    case zoomModeEnum.X:
+                //        break;
+                //}
+
+                //DrawZoomRect();
             }
         }
 
@@ -893,27 +952,19 @@ namespace UControlLibrary
         //}
 
         #endregion
-
-        protected virtual void OnClickPoint(ClickPointEventArg e)
-        {
-            ClickPoint?.Invoke(this, e);
-        }
     }
 
-    public class ClickPointEventArg:EventArgs
+    public class ClickPointEventArg : EventArgs
     {
-        private DataPoint p;
-        private int n;
-
         public ClickPointEventArg(DataPoint p, int n)
         {
-            this.p = p;
-            this.n = n;
+            P = p;
+            N = n;
         }
 
-        public DataPoint P => p;
+        public DataPoint P { get; }
 
-        public int N => n;
+        public int N { get; }
     }
 
     public static class GDI32
@@ -922,6 +973,8 @@ namespace UControlLibrary
         {
             R2_NOTXORPEN = 10
         }
+
+        private static Point nullPoint = new Point(0, 0);
 
         [DllImport("gdi32.dll")]
         public static extern bool Rectangle(IntPtr hDC, int left, int top, int right, int bottom);
@@ -944,30 +997,29 @@ namespace UControlLibrary
         [DllImport("gdi32.dll")]
         public static extern bool DeleteObject(IntPtr hObj);
 
-        static private Point nullPoint = new Point(0, 0);
-
         // Convert the Argb from .NET to a gdi32 RGB
-        static private int ArgbToRGB(int rgb)
+        private static int ArgbToRGB(int rgb)
         {
-            return ((rgb >> 16 & 0x0000FF) | (rgb & 0x00FF00) | (rgb << 16 & 0xFF0000));
+            return ((rgb >> 16) & 0x0000FF) | (rgb & 0x00FF00) | ((rgb << 16) & 0xFF0000);
         }
-        static public void DrawXORRectangle(Graphics graphics, Pen pen, Rectangle rectangle)
+
+        public static void DrawXORRectangle(Graphics graphics, Pen pen, Rectangle rectangle)
         {
             IntPtr hDC = graphics.GetHdc();
-            IntPtr hPen = CreatePen((int)pen.DashStyle, (int)pen.Width, ArgbToRGB(pen.Color.ToArgb()));
+            IntPtr hPen = CreatePen((int) pen.DashStyle, (int) pen.Width, ArgbToRGB(pen.Color.ToArgb()));
             SelectObject(hDC, hPen);
-            SetROP2(hDC, (int)GDI32.DrawingMode.R2_NOTXORPEN);
+            SetROP2(hDC, (int) DrawingMode.R2_NOTXORPEN);
             Rectangle(hDC, rectangle.Left, rectangle.Top, rectangle.Right, rectangle.Bottom);
             DeleteObject(hPen);
             graphics.ReleaseHdc(hDC);
         }
 
-        static public void DrawXORLine(Graphics graphics, Pen pen, int x1, int y1, int x2, int y2)
+        public static void DrawXORLine(Graphics graphics, Pen pen, int x1, int y1, int x2, int y2)
         {
             IntPtr hDC = graphics.GetHdc();
-            IntPtr hPen = CreatePen((int)pen.DashStyle, (int)pen.Width, ArgbToRGB(pen.Color.ToArgb()));
+            IntPtr hPen = CreatePen((int) pen.DashStyle, (int) pen.Width, ArgbToRGB(pen.Color.ToArgb()));
             SelectObject(hDC, hPen);
-            SetROP2(hDC, (int)GDI32.DrawingMode.R2_NOTXORPEN);
+            SetROP2(hDC, (int) DrawingMode.R2_NOTXORPEN);
             MoveToEx(hDC, x1, y1, ref nullPoint);
             LineTo(hDC, x2, y2);
             DeleteObject(hPen);

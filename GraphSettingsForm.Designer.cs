@@ -40,6 +40,7 @@
             this.pointLimitComboBox = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.lineColorDialog = new UControlLibrary.UColorDialog();
+            this.applySettings = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label3
@@ -213,13 +214,24 @@
             this.lineColorDialog.TabIndex = 3;
             this.lineColorDialog.Load += new System.EventHandler(this.LineColorDialog_Load);
             // 
+            // applySettings
+            // 
+            this.applySettings.Location = new System.Drawing.Point(30, 304);
+            this.applySettings.Name = "applySettings";
+            this.applySettings.Size = new System.Drawing.Size(89, 23);
+            this.applySettings.TabIndex = 14;
+            this.applySettings.Text = "Применить";
+            this.applySettings.UseVisualStyleBackColor = true;
+            this.applySettings.Click += new System.EventHandler(this.applySettings_Click);
+            // 
             // GraphSettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.AutoScrollMinSize = new System.Drawing.Size(0, 300);
-            this.ClientSize = new System.Drawing.Size(826, 480);
+            this.ClientSize = new System.Drawing.Size(738, 359);
+            this.Controls.Add(this.applySettings);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.axisYDataFormat);
             this.Controls.Add(this.yStepLabel);
@@ -256,5 +268,6 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ComboBox axisYDataFormat;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Button applySettings;
     }
 }

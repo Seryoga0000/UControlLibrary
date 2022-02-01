@@ -21,6 +21,7 @@ namespace UControlLibrary
             InitializeComponent();
             ch = chart;
             ActiveControl = MaxYComboBox;
+
         }
 
         private void GraphSettingsForm_Load(object sender, EventArgs e)
@@ -142,6 +143,12 @@ namespace UControlLibrary
         private void LineColorDialog_Load(object sender, EventArgs e)
         {
             LineColorDialog.Width = 350;
+        }
+
+        private void applySettings_Click(object sender, EventArgs e)
+        {
+            ch.LabelYFormat = AxisYDataFormat.Text;
+
         }
     }
 }

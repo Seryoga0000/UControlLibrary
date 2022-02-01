@@ -219,7 +219,7 @@ namespace UControlLibrary
             string t;
             //t = $@"{FullpathFolder}{DateTime.Now:MM.dd.yyyy HH_mm_ss}.txt";
             t = Path.Combine(FullpathFolder,
-                $"{prename}{DateTime.Now:MM.dd.yyyy HH_mm_ss}{aftername}.txt");
+                $"{prename}{DateTime.Now:dd.MM.yyyy HH_mm_ss}{aftername}.txt");
             FullPathFile = t;
             FileName = Path.GetFileName(t);
             RelatePathFile = Path.Combine(fname, FileName ?? throw new InvalidOperationException());
