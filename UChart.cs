@@ -86,7 +86,7 @@ namespace UControlLibrary
         //    for (int i = count; i < pcount; i++)
         //    {
         //        valueSeries.Points.RemoveAt(0);
-        //        ReseutAtueseR  alues();
+        //        ResetAutoValues();
         //    }
         //}
 
@@ -722,64 +722,12 @@ namespace UControlLibrary
                 //var right;
                 //var top;
                 //var bottom;
-                //var axX = ((Chart)sender).ChartAreas[0].AxisX;
-                //axX.ValueToPixelPosition(axX.Maximum);
-
-                var axisY = ChartAreas.FirstOrDefault().AxisY;
-                var axisX = ChartAreas.FirstOrDefault().AxisX;
-
-                
-
-                var deltaY = e.Y - handMovingInitPoint.Y;
-                var deltaX = e.X - handMovingInitPoint.X;
-
-                handMovingInitPoint.Y = e.Y;
-                handMovingInitPoint.X = e.X;
-
-                var newXmin = axisX.ValueToPixelPosition(axisX.Minimum);
-                var newXmax = axisX.ValueToPixelPosition(axisX.Maximum);
-
-                var newYmin = axisY.ValueToPixelPosition(axisY.Minimum);
-                var newYmax = axisY.ValueToPixelPosition(axisY.Maximum);
-
-                if (deltaY < 0)
-                {
-                    newYmin = newYmin - deltaY;
-                    newYmax = newYmax - deltaY;
-                }
-                if (deltaY > 0)
-                {
-                    newYmin = newYmin - deltaY;
-                    newYmax = newYmax - deltaY;
-                }
-                if (deltaX < 0)
-                {
-                    newXmin = newXmin - deltaX;
-                    newXmax = newXmax - deltaX;
-                }
-                if (deltaX > 0)
-                {
-                    newXmin = newXmin - deltaX;
-                    newXmax = newXmax - deltaX;
-                }
-
-                newXmin = Math.Max(0, newXmin);
-                newXmax = Math.Min(Width-1, newXmax);
-
-                newYmin = Math.Min(Height-1, newYmin);
-                newYmax = Math.Max(0, newYmax);
 
 
-
-                axisX.Minimum = axisX.PixelPositionToValue(newXmin);
-                axisX.Maximum = axisX.PixelPositionToValue(newXmax);
-
-                axisY.Minimum = axisY.PixelPositionToValue(newYmin);
-                axisY.Maximum = axisY.PixelPositionToValue(newYmax);
-
-
-                //SetZoomAxisScale(ChartAreas[0].AxisX, newXmin, newXmax);
-                //SetZoomAxisScale(ChartAreas[0].AxisY, newYmax, newYmin);
+                //ctrl.Top = (e.Y - handMovingInitPoint.Y);
+                //ctrl.Left = (e.X - handMovingInitPoint.X);
+                //SetZoomAxisScale(ChartAreas[0].AxisX, r.Left, r.Right);
+                //SetZoomAxisScale(ChartAreas[0].AxisY, r.Bottom, r.Top);
                 //DrawZoomRect();
                 //switch (zoomMode)
                 //{

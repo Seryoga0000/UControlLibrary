@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>UControlLibrary</RootNamespace>
     <AssemblyName>UControlLibrary</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <TargetFrameworkProfile />
@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,6 +30,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
@@ -88,6 +90,12 @@
     <Compile Include="Menus\SaveButtonTBS.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="MessageToolStripStatusLabel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="MessageToolStripStatusLabel.Designer.cs">
+      <DependentUpon>MessageToolStripStatusLabel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Resource1.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -100,7 +108,9 @@
     <Compile Include="UChart.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="UChart2.cs" />
+    <Compile Include="UChart2.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="GraphSettingsForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -150,6 +160,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ClassLibrary\ClassLibrary.csproj">
+      <Project>{841750ab-5e83-4b4c-bf13-9bec909e4389}</Project>
+      <Name>ClassLibrary</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ExtensionLib\ExtensionLib.csproj">
       <Project>{6190e8a7-6448-42a2-b314-8216ac8ea708}</Project>
       <Name>ExtensionLib</Name>
