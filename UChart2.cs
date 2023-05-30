@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Globalization;
@@ -298,7 +299,7 @@ namespace UControlLibrary
         private Grid grid;
         private readonly bool useGDI32 = false;
 
-        private readonly bool useNiceRoundNumbers = true;
+        private readonly bool useNiceRoundNumbers = false;
 
         //double piDiv180 = Math.PI / 180d;
         private enum zoomModeEnum
@@ -406,25 +407,101 @@ namespace UControlLibrary
                 var axisY = ChartAreas.FirstOrDefault().AxisY;
                 var axisX = ChartAreas.FirstOrDefault().AxisX;
                 Cursor = Cursors.Hand;
+
+                var eX = e.X;
+                var initPointX = handMovingInitPoint.X;
+
+                var dxP= eX - initPointX;
+
+                var dxV = axisX.PixelPositionToValue(Math.Abs(dxP))- axisX.PixelPositionToValue(0);
+
+                var eY = e.Y;
+                var initPointY = handMovingInitPoint.Y;
+
+                var dyP = eY - initPointY;
+
+                var dyV = axisY.PixelPositionToValue(Math.Abs(dyP)) - axisY.PixelPositionToValue(0);
+                //Debug.WriteLine(dxV);
                 //var area = ChartAreas.FirstOrDefault();
-                var dy = (e.Y - handMovingInitPoint.Y);
-                var dx = (e.X - handMovingInitPoint.X);
+                //var dy = (e.Y - handMovingInitPoint.Y);
+                //var eX = Math.Max(e.X, 0);
+                //eX = Math.Min(eX, 100);
+                //var eX = e.X;
+                //var eXValue = axisX.PixelPositionToValue(eX);
+                //var initPointX = Math.Max(handMovingInitPoint.X, 0);
+                //initPointX = Math.Min(initPointX, 100);
+                //var initPointX = handMovingInitPoint.X;
 
-                double positionMinX = axisX.ValueToPixelPosition(axisX.Minimum) - dx;
-                axisX.Minimum = axisX.PixelPositionToValue(positionMinX) ;
-                double positionMaxX = axisX.ValueToPixelPosition(axisX.Maximum) - dx;
-                axisX.Maximum = axisX.PixelPositionToValue(positionMaxX);
-                double positionMinY = axisY.ValueToPixelPosition(axisY.Minimum) - dy;
-                axisY.Minimum = axisY.PixelPositionToValue(positionMinY);
-                double positionMaxY = axisY.ValueToPixelPosition(axisY.Maximum) - dy;
-                axisY.Maximum = axisY.PixelPositionToValue(positionMaxY);
+                //var initPointXValue = axisX.PixelPositionToValue(initPointX);
+                //var dx = (eXValue - initPointXValue);
+                //SetZoomAxisScale(axisX, r.Left, r.Right);
+                //SetZoomAxisScale(axisY, r.Bottom, r.Top);
+                //SetAxis(axisY, axisY.Maximum - dyV * Math.Sign(dyP), axisY.Minimum - dyV * Math.Sign(dyP));
+                //SetAxis(axisX, axisX.Maximum - dxV * Math.Sign(dxP), axisX.Minimum - dxV * Math.Sign(dxP));
 
-                axisX.Interval = axisX.Interval;
-                //axisY.Interval = axisY.Interval.Round(2);
+                double yNewMax;
+                double yNewMin;
+                if (axisY.IsLogarithmic)
+                {
+                    yNewMax = Math.Pow(10, axisY.ScaleView.ViewMaximum - dyV * Math.Sign(dyP));
+                    yNewMin = Math.Pow(10, axisY.ScaleView.ViewMinimum - dyV * Math.Sign(dyP));
+                    //xNewMin = Math.Max(1e-15, xNewMin);
+                    //xNewMax = Math.Max(1e-15, xNewMax);
+                    if (yNewMin < 1e-15 || yNewMax < 1e-15) { return; }
+                    if (yNewMin >= (double)Decimal.MaxValue || yNewMax >= (double)Decimal.MaxValue) { return; }
+                    axisY.Maximum = yNewMax;
+                    axisY.Minimum = yNewMin;
 
-                axisX.Minimum = axisX.Minimum.Round(2);
+                }
+                else
+                {
+                    yNewMax = axisY.Maximum - dyV * Math.Sign(dyP);
+                    axisY.Maximum = yNewMax;
+                    yNewMin = axisY.Minimum - dyV * Math.Sign(dyP);
+                    axisY.Minimum = yNewMin;
+                }
+
+                double xNewMax;
+                double xNewMin;
+                if (axisX.IsLogarithmic) {
+                    xNewMax = Math.Pow(10, axisX.ScaleView.ViewMaximum - dxV * Math.Sign(dxP));
+                    xNewMin = Math.Pow(10,axisX.ScaleView.ViewMinimum -  dxV * Math.Sign(dxP));
+                    //xNewMin = Math.Max(1e-15, xNewMin);
+                    //xNewMax = Math.Max(1e-15, xNewMax);
+                    if (xNewMin < 1e-15 || xNewMax < 1e-15) { return; }
+                    if (xNewMin >= (double)Decimal.MaxValue || xNewMax >= (double)Decimal.MaxValue) { return; }
+                    axisX.Maximum = xNewMax;
+                    axisX.Minimum = xNewMin;
+
+                }
+                else
+                {
+                    xNewMax = axisX.Maximum - dxV * Math.Sign(dxP);
+                    axisX.Maximum = xNewMax;
+                    xNewMin = axisX.Minimum - dxV * Math.Sign(dxP);
+                    axisX.Minimum = xNewMin;
+                }
+
+                
+              
+               
+                //axisX.Maximum = axisX.Maximum - Math.Pow(10, dxV )* Math.Sign(dxP);
+                //axisX.Minimum = axisX.Minimum - Math.Pow(10, dxV )* Math.Sign(dxP);
+                //double positionMinX = axisX.ValueToPixelPosition(axisX.Minimum) - dx;
+                //axisX.Minimum = axisX.PixelPositionToValue(positionMinX) ;
+                //double positionMaxX = axisX.ValueToPixelPosition(axisX.Maximum) - dx;
+                //axisX.Maximum = axisX.PixelPositionToValue(positionMaxX);
+                //double positionMinY = axisY.ValueToPixelPosition(axisY.Minimum) - dy;
+                //axisY.Minimum = axisY.PixelPositionToValue(positionMinY);
+                //double positionMaxY = axisY.ValueToPixelPosition(axisY.Maximum) - dy;
+                //axisY.Maximum = axisY.PixelPositionToValue(positionMaxY);
+
+                //axisX.Interval = 2000;
+                //axisY.Interval = 0.1;
+
+                //axisX.Minimum = axisX.Minimum.Round(2);
                 //axisX.Interval= axisX.ScaleView.ViewMaximum-
-                axisY.Minimum = axisY.Minimum.Round(2);
+                //axisY.Minimum = axisY.Minimum.Round(2);
 
                 handMovingInitPoint = e.Location;
 
@@ -490,8 +567,19 @@ namespace UControlLibrary
 
         private void SetZoomAxisScale(Axis axis, int pxLow, int pxHi)
         {
-            double minValue = Math.Max(axis.Minimum, axis.PixelPositionToValue(pxLow));
-            double maxValue = Math.Min(axis.Maximum, axis.PixelPositionToValue(pxHi));
+            double minValue;
+            double maxValue;
+            if (axis.IsLogarithmic)
+            {
+                minValue = Math.Max(axis.Minimum, Math.Pow(10, axis.PixelPositionToValue(pxLow)));
+                maxValue = Math.Min(axis.Maximum, Math.Pow(10, axis.PixelPositionToValue(pxHi)));
+            }
+            else
+            {
+                minValue = Math.Max(axis.Minimum, axis.PixelPositionToValue(pxLow));
+                maxValue = Math.Min(axis.Maximum, axis.PixelPositionToValue(pxHi));
+            }
+          
             double axisInterval = 0;
             double axisIntMinor = 0;
             if (useNiceRoundNumbers)
@@ -635,10 +723,8 @@ namespace UControlLibrary
 
                     //if (newYmin >= newYmax) return;
 
-                    axisY.Maximum = newYmax;
-                    axisY.Minimum = newYmin;
-                    axisX.Maximum = newXmax;
-                    axisX.Minimum = newXmin;
+                    SetAxis(axisY, newYmax, newYmin);
+                    SetAxis(axisX, newXmax, newXmin);
                 }
                 else
                 {
@@ -667,10 +753,8 @@ namespace UControlLibrary
 
                     //if (newYmin >= newYmax) return;
 
-                    axisY.Maximum = newYmax;
-                    axisY.Minimum = newYmin;
-                    axisX.Maximum = newXmax;
-                    axisX.Minimum = newXmin;
+                    SetAxis(axisY, newYmax, newYmin);
+                    SetAxis(axisX, newXmax, newXmin);
                 }
             }
 
@@ -686,6 +770,104 @@ namespace UControlLibrary
             }
         }
 
+        private static void SetAxis(Axis axis, double newmax, double newmin)
+        {
+            if (axis.IsLogarithmic)
+            {
+                axis.Maximum = Math.Pow(10,newmax);
+                axis.Minimum = Math.Pow(10, newmin);
+            }
+            else
+            {
+                axis.Maximum = newmax;
+                axis.Minimum = newmin;
+            }
+           
+        }
+
+        private void ZoomedChart_MouseWheel3(object sender, MouseEventArgs e)
+        {
+            // Get the Chart control
+            Chart chart = (Chart)sender;
+
+            // Get the X and Y axis of the first chart area (assuming only one chart area exists)
+            Axis xAxis = chart.ChartAreas[0].AxisX;
+            Axis yAxis = chart.ChartAreas[0].AxisY;
+
+            // Get the mouse wheel delta
+            int delta = e.Delta;
+
+            // Adjust the axis minimum and maximum values based on the mouse wheel delta
+            if (delta > 0)
+            {
+                // Zoom in
+                double zoomFactor = 0.1; // Adjust zoom factor as needed
+
+                double xMin = xAxis.Minimum + (xAxis.Maximum - xAxis.Minimum) * zoomFactor;
+                double xMax = xAxis.Maximum - (xAxis.Maximum - xAxis.Minimum) * zoomFactor;
+                double yMin = yAxis.Minimum + (yAxis.Maximum - yAxis.Minimum) * zoomFactor;
+                double yMax = yAxis.Maximum - (yAxis.Maximum - yAxis.Minimum) * zoomFactor;
+
+                xAxis.Minimum = xMin;
+                xAxis.Maximum = xMax;
+                yAxis.Minimum = yMin;
+                yAxis.Maximum = yMax;
+            }
+            else if (delta < 0)
+            {
+                // Zoom out
+                double zoomFactor = 0.1; // Adjust zoom factor as needed
+
+                double xMin = xAxis.Minimum - (xAxis.Maximum - xAxis.Minimum) * zoomFactor;
+                double xMax = xAxis.Maximum + (xAxis.Maximum - xAxis.Minimum) * zoomFactor;
+                double yMin = yAxis.Minimum - (yAxis.Maximum - yAxis.Minimum) * zoomFactor;
+                double yMax = yAxis.Maximum + (yAxis.Maximum - yAxis.Minimum) * zoomFactor;
+
+                xAxis.Minimum = xMin;
+                xAxis.Maximum = xMax;
+                yAxis.Minimum = yMin;
+                yAxis.Maximum = yMax;
+            }
+        }
+        private void ZoomedChart_MouseWheel2(object sender, MouseEventArgs e)
+        {
+            {
+                // Get the Chart control
+                Chart chart = (Chart)sender;
+
+                // Get the X and Y axis of the first chart area (assuming only one chart area exists)
+                Axis xAxis = chart.ChartAreas[0].AxisX;
+                Axis yAxis = chart.ChartAreas[0].AxisY;
+
+                // Get the mouse wheel delta
+                int delta = e.Delta;
+
+                // Adjust the axis scales based on the mouse wheel delta
+                if (delta > 0)
+                {
+                    // Zoom in
+                    xAxis.ScaleView.ZoomReset();
+                    yAxis.ScaleView.ZoomReset();
+                }
+                else if (delta < 0)
+                {
+                    // Zoom out
+                    double zoomFactor = 1.1; // Adjust zoom factor as needed
+                    double xMin = xAxis.ScaleView.ViewMinimum;
+                    double xMax = xAxis.ScaleView.ViewMaximum;
+                    double yMin = yAxis.ScaleView.ViewMinimum;
+                    double yMax = yAxis.ScaleView.ViewMaximum;
+
+                    double posXStart = xAxis.PixelPositionToValue(e.Location.X) - (xMax - xMin) / (2 * zoomFactor);
+                    double posXFinish = xAxis.PixelPositionToValue(e.Location.X) + (xMax - xMin) / (2 * zoomFactor);
+                    double posYStart = yAxis.PixelPositionToValue(e.Location.Y) - (yMax - yMin) / (2 * zoomFactor);
+                    double posYFinish = yAxis.PixelPositionToValue(e.Location.Y) + (yMax - yMin) / (2 * zoomFactor);
+
+                    xAxis.ScaleView.Zoom(posXStart, posXFinish);
+                    yAxis.ScaleView.Zoom(posYStart, posYFinish);
+                }
+            }
+        }
         public struct GridStepStruct
         {
             public double X { get; set; }
@@ -796,12 +978,12 @@ namespace UControlLibrary
                 lineSeries.Points.AddXY(i, rnd.NextDouble());
             }
         }
-        public void CreateLineExampleLog()
+        public void CreateLineExampleLog(int imax=100)
         {
             var lineSeries = Series.FirstOrDefault();
             var rnd = new Random();
 
-            for (int i = 1; i < 100; i++)
+            for (int i = 1; i < imax; i++)
             {
                 lineSeries.Points.AddXY(Math.Pow(1.1,i), rnd.NextDouble());
             }
