@@ -101,7 +101,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resource1.resx</DependentUpon>
     </Compile>
-    <Compile Include="SaveToFile.cs" />
     <Compile Include="SmartButton.cs">
       <SubType>Component</SubType>
     </Compile>

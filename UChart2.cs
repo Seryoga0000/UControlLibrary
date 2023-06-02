@@ -272,7 +272,7 @@ namespace UControlLibrary
 
         #endregion
 
-        private void YReset()
+        public void YReset()
         {
             var axisY = ChartAreas.FirstOrDefault().AxisY;
             axisY.Maximum = double.NaN;
@@ -282,7 +282,7 @@ namespace UControlLibrary
             axisY.Interval = double.NaN;
         }
 
-        private void XReset()
+        public void XReset()
         {
             var axisX = ChartAreas.FirstOrDefault().AxisX;
             axisX.Maximum = double.NaN;
@@ -312,38 +312,46 @@ namespace UControlLibrary
 
         private void ZoomedChart_MouseDown(object sender, MouseEventArgs e)
         {
-            if (LicenseManager.UsageMode == LicenseUsageMode.Designtime) return;
-            Focus();
-            if (e.Button == MouseButtons.Left && e.Clicks == 1 && (ModifierKeys & Keys.Control) != 0 &&
-                sender is Chart)
+            try
             {
-                zoomingNow = true;
-
-                switch (zoomMode)
+                if (LicenseManager.UsageMode == LicenseUsageMode.Designtime) return;
+                Focus();
+                if (e.Button == MouseButtons.Left && e.Clicks == 1 && (ModifierKeys & Keys.Control) != 0 &&
+                    sender is Chart)
                 {
-                    case zoomModeEnum.XY:
-                        zoomRect.Location = e.Location;
-                        zoomRect.Width = zoomRect.Height = 0;
-                        break;
-                    case zoomModeEnum.Y:
-                        var axX = ((Chart)sender).ChartAreas[0].AxisX;
-                        zoomRect.Location = new Point((int)axX.ValueToPixelPosition(axX.Minimum), e.Y);
-                        zoomRect.Height = 0;
-                        zoomRect.Width = ((Chart)sender).ChartAreas[0].BorderWidth;
-                        break;
-                    case zoomModeEnum.X:
-                        break;
+                    zoomingNow = true;
+
+                    switch (zoomMode)
+                    {
+                        case zoomModeEnum.XY:
+                            zoomRect.Location = e.Location;
+                            zoomRect.Width = zoomRect.Height = 0;
+                            break;
+                        case zoomModeEnum.Y:
+                            var axX = ((Chart)sender).ChartAreas[0].AxisX;
+                            zoomRect.Location = new Point((int)axX.ValueToPixelPosition(axX.Minimum), e.Y);
+                            zoomRect.Height = 0;
+                            zoomRect.Width = ((Chart)sender).ChartAreas[0].BorderWidth;
+                            break;
+                        case zoomModeEnum.X:
+                            break;
+                    }
+
+                    DrawZoomRect();
                 }
 
-                DrawZoomRect();
+                //hand moving
+                if (e.Button == MouseButtons.Left && e.Clicks == 1 && (ModifierKeys & Keys.Alt) != 0 &&
+                    sender is Chart)
+                {
+                    handMovingNow = true;
+                    handMovingInitPoint = e.Location;
+                }
             }
-
-            //hand moving
-            if (e.Button == MouseButtons.Left && e.Clicks == 1 && (ModifierKeys & Keys.Alt) != 0 &&
-                sender is Chart)
+            catch (Exception)
             {
-                handMovingNow = true;
-                handMovingInitPoint = e.Location;
+
+             
             }
         }
 
@@ -376,157 +384,175 @@ namespace UControlLibrary
         }
         private void ZoomedChart_MouseMove(object sender, MouseEventArgs e)
         {
-            if (zoomingNow)
+            try
             {
-                DrawZoomRect();
-                switch (zoomMode)
+                if (zoomingNow)
                 {
-                    case zoomModeEnum.XY:
-                        zoomRect.Width = e.X - zoomRect.Left;
-                        zoomRect.Height = e.Y - zoomRect.Top;
-                        break;
-                    case zoomModeEnum.Y:
-                        var axX = ((Chart)sender).ChartAreas[0].AxisX;
-                        zoomRect.Width = (int)(axX.ValueToPixelPosition(axX.Maximum) -
-                            axX.ValueToPixelPosition(axX.Minimum));
-                        zoomRect.Height = e.Y - zoomRect.Top;
-                        break;
-                    case zoomModeEnum.X:
-                        break;
+                    DrawZoomRect();
+                    switch (zoomMode)
+                    {
+                        case zoomModeEnum.XY:
+                            zoomRect.Width = e.X - zoomRect.Left;
+                            zoomRect.Height = e.Y - zoomRect.Top;
+                            break;
+                        case zoomModeEnum.Y:
+                            var axX = ((Chart)sender).ChartAreas[0].AxisX;
+                            zoomRect.Width = (int)(axX.ValueToPixelPosition(axX.Maximum) -
+                                axX.ValueToPixelPosition(axX.Minimum));
+                            zoomRect.Height = e.Y - zoomRect.Top;
+                            break;
+                        case zoomModeEnum.X:
+                            break;
+                    }
+
+                    DrawZoomRect();
                 }
 
-                DrawZoomRect();
+                if (handMovingNow)
+                {
+                    //var left;
+                    //var right;
+                    //var top;
+                    //var bottom;
+                    var axisY = ChartAreas.FirstOrDefault().AxisY;
+                    var axisX = ChartAreas.FirstOrDefault().AxisX;
+                    Cursor = Cursors.Hand;
+
+                    var eX = e.X;
+                    var initPointX = handMovingInitPoint.X;
+
+                    var dxP = eX - initPointX;
+
+                    var dxV = axisX.PixelPositionToValue(Math.Abs(dxP)) - axisX.PixelPositionToValue(0);
+
+                    var eY = e.Y;
+                    var initPointY = handMovingInitPoint.Y;
+
+                    var dyP = eY - initPointY;
+
+                    var dyV = axisY.PixelPositionToValue(Math.Abs(dyP)) - axisY.PixelPositionToValue(0);
+                    //Debug.WriteLine(dxV);
+                    //var area = ChartAreas.FirstOrDefault();
+                    //var dy = (e.Y - handMovingInitPoint.Y);
+                    //var eX = Math.Max(e.X, 0);
+                    //eX = Math.Min(eX, 100);
+                    //var eX = e.X;
+                    //var eXValue = axisX.PixelPositionToValue(eX);
+                    //var initPointX = Math.Max(handMovingInitPoint.X, 0);
+                    //initPointX = Math.Min(initPointX, 100);
+                    //var initPointX = handMovingInitPoint.X;
+
+                    //var initPointXValue = axisX.PixelPositionToValue(initPointX);
+                    //var dx = (eXValue - initPointXValue);
+                    //SetZoomAxisScale(axisX, r.Left, r.Right);
+                    //SetZoomAxisScale(axisY, r.Bottom, r.Top);
+                    //SetAxis(axisY, axisY.Maximum - dyV * Math.Sign(dyP), axisY.Minimum - dyV * Math.Sign(dyP));
+                    //SetAxis(axisX, axisX.Maximum - dxV * Math.Sign(dxP), axisX.Minimum - dxV * Math.Sign(dxP));
+
+                    double yNewMax;
+                    double yNewMin;
+                    if (axisY.IsLogarithmic)
+                    {
+                        yNewMax = Math.Pow(10, axisY.ScaleView.ViewMaximum - dyV * Math.Sign(dyP));
+                        yNewMin = Math.Pow(10, axisY.ScaleView.ViewMinimum - dyV * Math.Sign(dyP));
+                        //xNewMin = Math.Max(1e-15, xNewMin);
+                        //xNewMax = Math.Max(1e-15, xNewMax);
+                        if (yNewMin < 1e-15 || yNewMax < 1e-15) { return; }
+                        if (yNewMin >= (double)Decimal.MaxValue || yNewMax >= (double)Decimal.MaxValue) { return; }
+                        axisY.Maximum = yNewMax;
+                        axisY.Minimum = yNewMin;
+
+                    }
+                    else
+                    {
+                        yNewMax = axisY.Maximum - dyV * Math.Sign(dyP);
+                        axisY.Maximum = yNewMax;
+                        yNewMin = axisY.Minimum - dyV * Math.Sign(dyP);
+                        axisY.Minimum = yNewMin;
+                    }
+
+                    double xNewMax;
+                    double xNewMin;
+                    if (axisX.IsLogarithmic)
+                    {
+                        xNewMax = Math.Pow(10, axisX.ScaleView.ViewMaximum - dxV * Math.Sign(dxP));
+                        xNewMin = Math.Pow(10, axisX.ScaleView.ViewMinimum - dxV * Math.Sign(dxP));
+                        //xNewMin = Math.Max(1e-15, xNewMin);
+                        //xNewMax = Math.Max(1e-15, xNewMax);
+                        if (xNewMin < 1e-15 || xNewMax < 1e-15) { return; }
+                        if (xNewMin >= (double)Decimal.MaxValue || xNewMax >= (double)Decimal.MaxValue) { return; }
+                        axisX.Maximum = xNewMax;
+                        axisX.Minimum = xNewMin;
+
+                    }
+                    else
+                    {
+                        xNewMax = axisX.Maximum - dxV * Math.Sign(dxP);
+                        axisX.Maximum = xNewMax;
+                        xNewMin = axisX.Minimum - dxV * Math.Sign(dxP);
+                        axisX.Minimum = xNewMin;
+                    }
+
+
+
+
+                    //axisX.Maximum = axisX.Maximum - Math.Pow(10, dxV )* Math.Sign(dxP);
+                    //axisX.Minimum = axisX.Minimum - Math.Pow(10, dxV )* Math.Sign(dxP);
+                    //double positionMinX = axisX.ValueToPixelPosition(axisX.Minimum) - dx;
+                    //axisX.Minimum = axisX.PixelPositionToValue(positionMinX) ;
+                    //double positionMaxX = axisX.ValueToPixelPosition(axisX.Maximum) - dx;
+                    //axisX.Maximum = axisX.PixelPositionToValue(positionMaxX);
+                    //double positionMinY = axisY.ValueToPixelPosition(axisY.Minimum) - dy;
+                    //axisY.Minimum = axisY.PixelPositionToValue(positionMinY);
+                    //double positionMaxY = axisY.ValueToPixelPosition(axisY.Maximum) - dy;
+                    //axisY.Maximum = axisY.PixelPositionToValue(positionMaxY);
+
+                    //axisX.Interval = 2000;
+                    //axisY.Interval = 0.1;
+
+                    //axisX.Minimum = axisX.Minimum.Round(2);
+                    //axisX.Interval= axisX.ScaleView.ViewMaximum-
+                    //axisY.Minimum = axisY.Minimum.Round(2);
+
+                    handMovingInitPoint = e.Location;
+
+
+                }
             }
-
-            if (handMovingNow)
+            catch (Exception)
             {
-                //var left;
-                //var right;
-                //var top;
-                //var bottom;
-                var axisY = ChartAreas.FirstOrDefault().AxisY;
-                var axisX = ChartAreas.FirstOrDefault().AxisX;
-                Cursor = Cursors.Hand;
-
-                var eX = e.X;
-                var initPointX = handMovingInitPoint.X;
-
-                var dxP= eX - initPointX;
-
-                var dxV = axisX.PixelPositionToValue(Math.Abs(dxP))- axisX.PixelPositionToValue(0);
-
-                var eY = e.Y;
-                var initPointY = handMovingInitPoint.Y;
-
-                var dyP = eY - initPointY;
-
-                var dyV = axisY.PixelPositionToValue(Math.Abs(dyP)) - axisY.PixelPositionToValue(0);
-                //Debug.WriteLine(dxV);
-                //var area = ChartAreas.FirstOrDefault();
-                //var dy = (e.Y - handMovingInitPoint.Y);
-                //var eX = Math.Max(e.X, 0);
-                //eX = Math.Min(eX, 100);
-                //var eX = e.X;
-                //var eXValue = axisX.PixelPositionToValue(eX);
-                //var initPointX = Math.Max(handMovingInitPoint.X, 0);
-                //initPointX = Math.Min(initPointX, 100);
-                //var initPointX = handMovingInitPoint.X;
-
-                //var initPointXValue = axisX.PixelPositionToValue(initPointX);
-                //var dx = (eXValue - initPointXValue);
-                //SetZoomAxisScale(axisX, r.Left, r.Right);
-                //SetZoomAxisScale(axisY, r.Bottom, r.Top);
-                //SetAxis(axisY, axisY.Maximum - dyV * Math.Sign(dyP), axisY.Minimum - dyV * Math.Sign(dyP));
-                //SetAxis(axisX, axisX.Maximum - dxV * Math.Sign(dxP), axisX.Minimum - dxV * Math.Sign(dxP));
-
-                double yNewMax;
-                double yNewMin;
-                if (axisY.IsLogarithmic)
-                {
-                    yNewMax = Math.Pow(10, axisY.ScaleView.ViewMaximum - dyV * Math.Sign(dyP));
-                    yNewMin = Math.Pow(10, axisY.ScaleView.ViewMinimum - dyV * Math.Sign(dyP));
-                    //xNewMin = Math.Max(1e-15, xNewMin);
-                    //xNewMax = Math.Max(1e-15, xNewMax);
-                    if (yNewMin < 1e-15 || yNewMax < 1e-15) { return; }
-                    if (yNewMin >= (double)Decimal.MaxValue || yNewMax >= (double)Decimal.MaxValue) { return; }
-                    axisY.Maximum = yNewMax;
-                    axisY.Minimum = yNewMin;
-
-                }
-                else
-                {
-                    yNewMax = axisY.Maximum - dyV * Math.Sign(dyP);
-                    axisY.Maximum = yNewMax;
-                    yNewMin = axisY.Minimum - dyV * Math.Sign(dyP);
-                    axisY.Minimum = yNewMin;
-                }
-
-                double xNewMax;
-                double xNewMin;
-                if (axisX.IsLogarithmic) {
-                    xNewMax = Math.Pow(10, axisX.ScaleView.ViewMaximum - dxV * Math.Sign(dxP));
-                    xNewMin = Math.Pow(10,axisX.ScaleView.ViewMinimum -  dxV * Math.Sign(dxP));
-                    //xNewMin = Math.Max(1e-15, xNewMin);
-                    //xNewMax = Math.Max(1e-15, xNewMax);
-                    if (xNewMin < 1e-15 || xNewMax < 1e-15) { return; }
-                    if (xNewMin >= (double)Decimal.MaxValue || xNewMax >= (double)Decimal.MaxValue) { return; }
-                    axisX.Maximum = xNewMax;
-                    axisX.Minimum = xNewMin;
-
-                }
-                else
-                {
-                    xNewMax = axisX.Maximum - dxV * Math.Sign(dxP);
-                    axisX.Maximum = xNewMax;
-                    xNewMin = axisX.Minimum - dxV * Math.Sign(dxP);
-                    axisX.Minimum = xNewMin;
-                }
-
-                
-              
-               
-                //axisX.Maximum = axisX.Maximum - Math.Pow(10, dxV )* Math.Sign(dxP);
-                //axisX.Minimum = axisX.Minimum - Math.Pow(10, dxV )* Math.Sign(dxP);
-                //double positionMinX = axisX.ValueToPixelPosition(axisX.Minimum) - dx;
-                //axisX.Minimum = axisX.PixelPositionToValue(positionMinX) ;
-                //double positionMaxX = axisX.ValueToPixelPosition(axisX.Maximum) - dx;
-                //axisX.Maximum = axisX.PixelPositionToValue(positionMaxX);
-                //double positionMinY = axisY.ValueToPixelPosition(axisY.Minimum) - dy;
-                //axisY.Minimum = axisY.PixelPositionToValue(positionMinY);
-                //double positionMaxY = axisY.ValueToPixelPosition(axisY.Maximum) - dy;
-                //axisY.Maximum = axisY.PixelPositionToValue(positionMaxY);
-
-                //axisX.Interval = 2000;
-                //axisY.Interval = 0.1;
-
-                //axisX.Minimum = axisX.Minimum.Round(2);
-                //axisX.Interval= axisX.ScaleView.ViewMaximum-
-                //axisY.Minimum = axisY.Minimum.Round(2);
-
-                handMovingInitPoint = e.Location;
-
+                zoomingNow = false;
+                handMovingNow = false;
 
             }
         }
         private void ZoomedChart_MouseUp(object sender, MouseEventArgs e)
         {
-            if (zoomingNow && e.Button == MouseButtons.Left)
+            try
             {
-                DrawZoomRect();
-                if (zoomRect.Width != 0 && zoomRect.Height != 0)
+                if (zoomingNow && e.Button == MouseButtons.Left)
                 {
-                    zoomRect = new Rectangle(Math.Min(zoomRect.Left, zoomRect.Right),
-                        Math.Min(zoomRect.Top, zoomRect.Bottom), Math.Abs(zoomRect.Width),
-                        Math.Abs(zoomRect.Height));
-                    ZoomInToZoomRect();
+                    DrawZoomRect();
+                    if (zoomRect.Width != 0 && zoomRect.Height != 0)
+                    {
+                        zoomRect = new Rectangle(Math.Min(zoomRect.Left, zoomRect.Right),
+                            Math.Min(zoomRect.Top, zoomRect.Bottom), Math.Abs(zoomRect.Width),
+                            Math.Abs(zoomRect.Height));
+                        ZoomInToZoomRect();
+                    }
+
+                    zoomingNow = false;
                 }
 
-                zoomingNow = false;
+                if (handMovingNow && e.Button == MouseButtons.Left)
+                {
+                    Cursor = Cursors.Arrow;
+                    handMovingNow = false;
+                }
             }
-
-            if (handMovingNow && e.Button == MouseButtons.Left)
-            { 
-                Cursor=Cursors.Arrow;
+            catch (Exception)
+            {
+                zoomingNow = false;
                 handMovingNow = false;
             }
         }
@@ -540,10 +566,10 @@ namespace UControlLibrary
 
             //ChartScaleData csd = MainChart.Tag as ChartScaleData;
             //Get overlap of zoomRect and the innerPlotRectangle
-            Rectangle ipr = grid.AxisRectangle;
-            if (!r.IntersectsWith(ipr))
-                return;
-            r.Intersect(ipr);
+            //Rectangle ipr = grid.AxisRectangle;
+            //if (!r.IntersectsWith(ipr))
+            //    return;
+            //r.Intersect(ipr);
             //if (!csd.isZoomed)
             //{
             //    csd.isZoomed = true;
@@ -671,7 +697,15 @@ namespace UControlLibrary
 
         private void ZoomedChart_PostPaint(object sender, ChartPaintEventArgs e)
         {
-            grid.Refresh(ChartAreas[0].AxisX, ChartAreas[0].AxisY);
+            try
+            {
+                //grid.Refresh(ChartAreas[0].AxisX, ChartAreas[0].AxisY);
+            }
+            catch (Exception)
+            {
+
+              
+            }
         }
 
         private void ZoomedChart_MouseWheel(object sender, MouseEventArgs e)
@@ -774,8 +808,13 @@ namespace UControlLibrary
         {
             if (axis.IsLogarithmic)
             {
-                axis.Maximum = Math.Pow(10,newmax);
-                axis.Minimum = Math.Pow(10, newmin);
+                double max = Math.Pow(10, newmax);
+                double min = Math.Pow(10, newmin);
+                if (max <= 0 || min <= 0) return;
+                if (max >= (double)Decimal.MaxValue || min >= (double)Decimal.MaxValue) return;
+                if (max <= min) return;
+                axis.Maximum = max;
+                axis.Minimum = min;
             }
             else
             {
