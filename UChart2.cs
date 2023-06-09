@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
@@ -34,7 +35,7 @@ namespace UControlLibrary
 
         public ZoomedChart()
         {
-          
+
         }
 
 
@@ -62,7 +63,7 @@ namespace UControlLibrary
 
         //private void PointLimitChecking()
         //{
-          
+
 
         //    int count = PointsLimit;
         //    int pcount = valueSeries.Points.Count;
@@ -172,7 +173,7 @@ namespace UControlLibrary
             MouseClick += ZoomedChart_MouseClick;
         }
 
-      
+
         private void ZoomedChart_MouseClick(object sender, MouseEventArgs e)
         {
             var r = HitTest(e.X, e.Y);
@@ -225,7 +226,7 @@ namespace UControlLibrary
             //    true, DataSourceUpdateMode.OnValidation);
         }
 
-      
+
 
         public void ZoomInitialize()
         {
@@ -260,7 +261,7 @@ namespace UControlLibrary
 
         #endregion
 
-       
+
 
 
         #region Свойства
@@ -292,7 +293,7 @@ namespace UControlLibrary
             axisX.Interval = double.NaN;
         }
 
-      
+
 
         #region Zoom
 
@@ -351,7 +352,7 @@ namespace UControlLibrary
             catch (Exception)
             {
 
-             
+
             }
         }
 
@@ -382,6 +383,31 @@ namespace UControlLibrary
             //    }
             //}
         }
+        public double AxisPixelToValue(double distanceInPixels)
+        {
+
+            // Get the chart area
+            ChartArea chartArea = this.ChartAreas[0];
+
+            // Get the minimum and maximum values of the X-axis
+            double xMin = chartArea.AxisX.Minimum;
+            double xMax = chartArea.AxisX.Maximum;
+
+            // Get the width of the chart area in pixels
+            double chartAreaWidth = chartArea.InnerPlotPosition.Width;
+
+            // Calculate the conversion factor
+            double conversionFactor = (xMax - xMin) / chartAreaWidth;
+
+            // Convert the distance in pixels to X-axis value
+            double xValue =distanceInPixels * conversionFactor;
+
+            // Print the result
+           return xValue;
+        }
+        //List<double> avgdx=new List<double>(10);
+        double dxV0 = double.NaN;
+        double xV00 = double.NaN;
         private void ZoomedChart_MouseMove(object sender, MouseEventArgs e)
         {
             try
@@ -423,14 +449,43 @@ namespace UControlLibrary
 
                     var dxP = eX - initPointX;
 
-                    var dxV = axisX.PixelPositionToValue(Math.Abs(dxP)) - axisX.PixelPositionToValue(0);
+                    double xV0 = axisX.PixelPositionToValue(0);
+                    double xV = axisX.PixelPositionToValue(Math.Abs(dxP));
+                    //double xV0 = AxisPixelToValue(0);
+                    //double xV = AxisPixelToValue(Math.Abs(dxP));
+                    var dxV =xV - xV0;
 
                     var eY = e.Y;
                     var initPointY = handMovingInitPoint.Y;
 
                     var dyP = eY - initPointY;
 
+                    //var dyV = axisY.PixelPositionToValue(Math.Abs(dyP)) - axisY.PixelPositionToValue(0);
                     var dyV = axisY.PixelPositionToValue(Math.Abs(dyP)) - axisY.PixelPositionToValue(0);
+
+                    //Debug.WriteLine($"******************************");
+                    //Debug.WriteLine($" {dxP}");
+                    //Debug.WriteLine($" {xV}");
+                    //Debug.WriteLine($"{xV0}");
+                    //Debug.WriteLine($"{dxV}");
+                    
+                    //ChartHelper.GetIntervalSize(axisX.ScaleView.Position, axisX.ScaleView.Size, axisX.ScaleView.SizeType);
+                    //ChartHelper.
+                    ////if(dxV0 != double.NaN && dxV0 != 0)
+                    ////{
+                    ////    if (dxV - dxV0 > 10) return;
+                    ////}
+
+                    ////dxV0 = dxV;
+                    //if (xV00 != double.NaN && xV00 != 0)
+                    //{
+                    //    if (xV0 / xV00 > 10) return;
+                    //}
+
+                    //xV00 = xV0;
+                    //}
+                    //if (dxV == 0) return;
+                    //if (dyV == 0) return;
                     //Debug.WriteLine(dxV);
                     //var area = ChartAreas.FirstOrDefault();
                     //var dy = (e.Y - handMovingInitPoint.Y);
@@ -453,12 +508,61 @@ namespace UControlLibrary
                     double yNewMin;
                     if (axisY.IsLogarithmic)
                     {
-                        yNewMax = Math.Pow(10, axisY.ScaleView.ViewMaximum - dyV * Math.Sign(dyP));
-                        yNewMin = Math.Pow(10, axisY.ScaleView.ViewMinimum - dyV * Math.Sign(dyP));
+                       
+
+                        double viewMaximum = axisY.ScaleView.ViewMaximum;
+                        if (Math.Abs(axisY.ScaleView.ViewMaximum - axisY.Maximum) < 0.1)
+                        {
+                            return;
+                        }
+                        if (axisY.Maximum != double.NaN)
+                        {
+                            //viewMaximum = Math.Log10(axisY.Maximum);
+                            yNewMax = axisY.Maximum * Math.Pow(10, -dyV * Math.Sign(dyP));
+                        }
+                        else
+                        {
+                            yNewMax = Math.Pow(10, viewMaximum - dyV * Math.Sign(dyP));
+                        }
+
+                        double viewMinimum = axisY.ScaleView.ViewMinimum;
+                        if (axisY.Minimum != double.NaN)
+                        {
+                            //viewMinimum = Math.Log10(axisY.Minimum);
+                            yNewMin = axisY.Minimum * Math.Pow(10, -dyV * Math.Sign(dyP));
+                        }
+                        else
+                        {
+                            yNewMin = Math.Pow(10, viewMinimum - dyV * Math.Sign(dyP));
+                        }
+
                         //xNewMin = Math.Max(1e-15, xNewMin);
                         //xNewMax = Math.Max(1e-15, xNewMax);
-                        if (yNewMin < 1e-15 || yNewMax < 1e-15) { return; }
-                        if (yNewMin >= (double)Decimal.MaxValue || yNewMax >= (double)Decimal.MaxValue) { return; }
+                        //Debug.WriteLine($"{dyV}");
+                        //Debug.WriteLine($"{yNewMin}___{yNewMax}");
+                        //xNewMax = Math.Max(1e-15, xNewMax);
+                        if (yNewMin <= 0)
+                        {
+                            return;
+                        }
+                        if (yNewMax <= 0)
+                        {
+                            return;
+                        }
+                        if (yNewMin > yNewMax)
+                        {
+                            return;
+                        }
+                        if (Math.Pow(10, -dyV) > (yNewMax / yNewMin)) return;
+
+                        if (yNewMin < 1e-300 || yNewMax < 1e-300)
+                        {
+                            return;
+                        }
+                        if (yNewMin >= (double)Decimal.MaxValue || yNewMax >= (double)Decimal.MaxValue)
+                        {
+                            return;
+                        }
                         axisY.Maximum = yNewMax;
                         axisY.Minimum = yNewMin;
 
@@ -475,14 +579,75 @@ namespace UControlLibrary
                     double xNewMin;
                     if (axisX.IsLogarithmic)
                     {
-                        xNewMax = Math.Pow(10, axisX.ScaleView.ViewMaximum - dxV * Math.Sign(dxP));
-                        xNewMin = Math.Pow(10, axisX.ScaleView.ViewMinimum - dxV * Math.Sign(dxP));
+                        //Debug.WriteLine($"{axisX.ScaleView.ViewMinimum}___{axisX.ScaleView.ViewMaximum}");
+                        //Debug.WriteLine($" {Math.Abs(axisX.ScaleView.ViewMaximum - Math.Log10(axisX.Maximum))}");
+                        if (Math.Abs(axisX.ScaleView.ViewMaximum - axisX.Maximum) < 0.1)
+                        {
+                            return;
+                        }
+                        double viewMaximum = axisX.ScaleView.ViewMaximum;
+                        if (axisX.Maximum != double.NaN)
+                        {
+                            //viewMaximum = Math.Log10(axisX.Maximum);
+                            xNewMax = axisX.Maximum * Math.Pow(10, -dxV * Math.Sign(dxP));
+                        }
+                        else
+                        {
+                            xNewMax = Math.Pow(10, viewMaximum - dxV * Math.Sign(dxP));
+                        }
+
+
+
+                        double viewMinimum = axisX.ScaleView.ViewMinimum;
+
+                        if (axisX.Minimum != double.NaN)
+                        {
+                            //viewMinimum = Math.Log10(axisX.Minimum);
+                            xNewMin = axisX.Minimum * Math.Pow(10, -dxV * Math.Sign(dxP));
+                        }
+                        else
+                        {
+                            xNewMin = Math.Pow(10, viewMinimum - dxV * Math.Sign(dxP));
+                        }
+
+                        //if (Math.Pow(10, -dxV) > Math.Abs((xNewMax / xNewMin))) return;
+                        //if (axisX.ScaleView.ViewMinimum != axisX.Minimum)
+                        //{
+                        //    var t = 9;
+                        //}
+
                         //xNewMin = Math.Max(1e-15, xNewMin);
                         //xNewMax = Math.Max(1e-15, xNewMax);
-                        if (xNewMin < 1e-15 || xNewMax < 1e-15) { return; }
-                        if (xNewMin >= (double)Decimal.MaxValue || xNewMax >= (double)Decimal.MaxValue) { return; }
+                        if (xNewMin <= 0)
+                        {
+                            return;
+                        }
+                        if (xNewMax <= 0)
+                        {
+                            return;
+                        }
+                        if (xNewMin > xNewMax)
+                        {
+                            return;
+                        }
+                        if (xNewMin < 1e-300 || xNewMax < 1e-300)
+                        {
+                            return;
+                        }
+                        if (xNewMin >= (double)Decimal.MaxValue || xNewMax >= (double)Decimal.MaxValue)
+                        {
+                            return;
+                        }
+
+                        //if (xNewMin > 0.9)
+                        //{
+                        //    var t = 0;
+                        //}
+
+
                         axisX.Maximum = xNewMax;
                         axisX.Minimum = xNewMin;
+
 
                     }
                     else
@@ -605,7 +770,7 @@ namespace UControlLibrary
                 minValue = Math.Max(axis.Minimum, axis.PixelPositionToValue(pxLow));
                 maxValue = Math.Min(axis.Maximum, axis.PixelPositionToValue(pxHi));
             }
-          
+
             double axisInterval = 0;
             double axisIntMinor = 0;
             if (useNiceRoundNumbers)
@@ -693,7 +858,7 @@ namespace UControlLibrary
             return Convert.ToInt32(Math.Floor(Math.Log10(Math.Abs(num))));
         }
 
-       
+
 
         private void ZoomedChart_PostPaint(object sender, ChartPaintEventArgs e)
         {
@@ -704,7 +869,7 @@ namespace UControlLibrary
             catch (Exception)
             {
 
-              
+
             }
         }
 
@@ -821,7 +986,7 @@ namespace UControlLibrary
                 axis.Maximum = newmax;
                 axis.Minimum = newmin;
             }
-           
+
         }
 
         private void ZoomedChart_MouseWheel3(object sender, MouseEventArgs e)
@@ -1012,23 +1177,23 @@ namespace UControlLibrary
             var lineSeries = Series.FirstOrDefault();
             var rnd = new Random();
 
-            for(int i= 0; i < 100; i++)
+            for (int i = 0; i < 100; i++)
             {
                 lineSeries.Points.AddXY(i, rnd.NextDouble());
             }
         }
-        public void CreateLineExampleLog(int imax=100)
+        public void CreateLineExampleLog(int imax = 100)
         {
             var lineSeries = Series.FirstOrDefault();
             var rnd = new Random();
 
             for (int i = 1; i < imax; i++)
             {
-                lineSeries.Points.AddXY(Math.Pow(1.1,i), rnd.NextDouble());
+                lineSeries.Points.AddXY(Math.Pow(1.1, i), rnd.NextDouble());
             }
         }
     }
 
-   
-    
+
+
 }
